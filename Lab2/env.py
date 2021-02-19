@@ -2,10 +2,16 @@ import numpy as np
 
 class Environment():
     
-    def __init__(self):
+    def __init__(self, start_state=None, goal_state=None):
         self.actions = [1,2,3,4] #1 - Up, 2 - Down, 3 - Right, 4 - Left
-        self.goal_state = self.generate_goal_state()
-        self.start_state = self.generate_start_state()
+        if goal_state is None:
+            self.goal_state = self.generate_goal_state()
+        else:
+            self.goal_state = goal_state
+        if start_state is None:
+            self.start_state = self.generate_start_state()
+        else:
+            self.start_state = start_state
     
     def generate_start_state(self):
         
