@@ -1,6 +1,7 @@
 import numpy as np
 from agent import Agent
 from env import Environment
+
 def heuristic1(curr_state):
     cost = 0
     for i in range(7):
@@ -20,5 +21,6 @@ def heuristic2(curr_state):
     return cost
 
 agent = Agent(Environment(), heuristic2)
+
 agent.run()
 agent.print_nodes()
