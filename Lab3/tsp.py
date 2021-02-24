@@ -1,6 +1,7 @@
 from random import random
 from simulated_annealing import SimAnneal
 import numpy as np
+import time
 
 
 def tsp_read(nodes):
@@ -29,12 +30,14 @@ def tsp_read(nodes):
 def main():
     # generate_random_coords(100)
     nodes, place = tsp_read("Data/rajasthan.tsp")
-    coords = np.random.randint(10, size=(10, 3))
     coords = np.array(nodes)
     n = len(coords)
-    sa = SimAnneal(coords, place,stopping_iter=n*10000000)
+    start = time.time_ns()
+    sa = SimAnneal(coords, place, stopping_iter=n*10000000)
+    end = time.time_ns()
+    print('Execution Time', end-start)
     sa.simulated_annealing()
-    sa.displace_optimal_path()
+    sa.display_optimal_path()
     sa.animateSolutions()
     sa.plot_learning()
 
