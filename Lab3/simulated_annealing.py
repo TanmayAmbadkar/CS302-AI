@@ -5,7 +5,7 @@ import animated_visualizer
 
 
 class SimAnneal():
-    def __init__(self, coordinates, place, stopping_iter, N=-1, nodes=-1, temp=-1, stopping_T=-1):
+    def __init__(self, coordinates, place, stopping_iter, N=-1, nodes=-1, temp=-1, stopping_temperature=-1):
         self.coords = coordinates
         self.place = place
         self.N = len(coordinates)
@@ -95,7 +95,7 @@ class SimAnneal():
             self.path_history.append(self.current_path)
         print("Best cost obtained:", self.best_cost)
 
-    def displace_optimal_path(self):
+    def display_optimal_path(self):
         n = len(self.best_path)
         tour = ''
         for i in range(0, (n)):
@@ -115,6 +115,7 @@ class SimAnneal():
         plt.plot([i for i in range(len(self.cost_list))], self.cost_list)
         line_init = plt.axhline(y=initial_cost, color='r', linestyle='--')
         line_min = plt.axhline(y=self.best_cost, color='g', linestyle='--')
+        plt.title("Learning progress")
         plt.legend([line_init, line_min], ['Initial Cost', 'Optimized Cost'])
         plt.ylabel("Cost")
         plt.xlabel("Iteration")
