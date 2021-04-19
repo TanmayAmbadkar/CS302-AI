@@ -1,6 +1,7 @@
 import random
 from random import choice
 from collections import Counter
+import json
 
 
 class Menace:
@@ -8,8 +9,11 @@ class Menace:
     def __init__(self):
         self.board = [" "]*9
         self.beads = [10]*9
-        self.matchboxes = {}
+        # self.matchboxes = {}
         self.movesplayed = []
+        a_file = open("data.json", "r")
+        # output = a_file.read()
+        self.matchboxes = json.loads(a_file.read())
 
     def printBoard(self):
         print("\nPositions:")
@@ -142,6 +146,9 @@ class Menace:
             print("Thank you for playing!! \n")
             return True
         else:
+            a_file = open("data.json", "w")
+            json.dump(self.matchboxes, a_file)
+            a_file.close()
             return False
 
     # def Play(self):
