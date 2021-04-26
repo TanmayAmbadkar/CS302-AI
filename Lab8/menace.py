@@ -11,9 +11,13 @@ class Menace:
         self.beads = [10]*9
         # self.matchboxes = {}
         self.movesplayed = []
-        a_file = open("data.json", "r")
-        # output = a_file.read()
-        self.matchboxes = json.loads(a_file.read())
+        try:
+            a_file = open("data.json", "r")
+            # output = a_file.read()
+            self.matchboxes = json.loads(a_file.read())
+        except:
+            self.matchboxes = {}
+            # print("No Pre Game exist")
 
     def printBoard(self):
         print("\nPositions:")
@@ -144,6 +148,9 @@ class Menace:
         ans = input("\nDo you want to continue? Yes or No \n")
         if ans.lower() == "no":
             print("Thank you for playing!! \n")
+            a_file = open("data.json", "w")
+            json.dump(self.matchboxes, a_file)
+            a_file.close()
             return True
         else:
             a_file = open("data.json", "w")
