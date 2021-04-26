@@ -1,0 +1,121 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r message=FALSE, warning=FALSE}
+library(bnlearn)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+course.grades<-read.table("2020_bn_nb_data.txt",head=TRUE)
+head(course.grades)
+```
+```{r message=FALSE, warning=FALSE}
+course.grades<- lapply(course.grades,as.factor)
+course.grades<- data.frame(course.grades)
+course.grades.net<- hc(course.grades[,-9],score = 'k2')
+plot(course.grades.net)
+```
+
+```{r message=FALSE, warning=FALSE}
+course.grades.net
+```
+
+
+```{r message=FALSE, warning=FALSE}
+course.grades.fit <- bn.fit(course.grades.net,course.grades[,-9])
+```
+
+
+```{r message=FALSE, warning=FALSE}
+course.grades.fit$EC100
+course.grades.fit$EC160
+course.grades.fit$IT101
+course.grades.fit$IT161
+course.grades.fit$MA101
+course.grades.fit$PH100
+course.grades.fit$PH160
+course.grades.fit$HS101
+```
+
+```{r message=FALSE, warning=FALSE}
+bn.fit.barchart(course.grades.fit$EC100)
+bn.fit.barchart(course.grades.fit$EC160)
+bn.fit.barchart(course.grades.fit$IT101)
+bn.fit.barchart(course.grades.fit$IT161)
+bn.fit.barchart(course.grades.fit$MA101)
+bn.fit.barchart(course.grades.fit$PH100)
+bn.fit.barchart(course.grades.fit$PH160)
+```
+
+
+
+```{r message=FALSE, warning=FALSE}
+course.grades.PH100 <- data.frame( cpdist(course.grades.fit, nodes = c("PH100"),evidence = ( (EC100=="DD") & (IT101=="CC") &( MA101== "CD"))))
+```
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+df <- course.grades.PH100 %>%
+  group_by(PH100) %>%
+  summarise(counts = n())
+
+library(ggplot2)
+ggplot(df, aes(x = PH100, y = counts)) +
+  geom_bar(fill = "#0073C2FF", stat = "identity") +
+  geom_text(aes(label = counts), vjust = -0.3) 
+
+```
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+library(bnclassify)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+set.seed(101)
+sample <-  sample.int(n = nrow(course.grades), size = floor(.75*nrow(course.grades)), replace = F)
+course.grades.train <-course.grades[sample,]
+course.grades.test<- course.grades[-sample,]
+
+```
+
+```{r message=FALSE, warning=FALSE}
+nb.grades <- nb(class = "QP",dataset= course.grades.train)
+
+plot(nb.grades)
+```
+```{r message=FALSE, warning=FALSE}
+nb.grades <- lp(nb.grades,course.grades.train,smooth=0)
+nb.grades$.params
+```
+
+```{r message=FALSE, warning=FALSE}
+p <-predict(nb.grades,course.grades.test)
+cm <- table(predicted_on_test_data = p , true = course.grades.test$QP)
+cm
+```
+
+```{r message=FALSE, warning=FALSE}
+bnclassify:::accuracy(p, course.grades.test$QP)
+
+```
+```{r message=FALSE, warning=FALSE}
+tn <- tan_cl('QP', course.grades.train)
+tn <- lp(tn,course.grades.train, smooth = 1)
+plot(tn)
+
+```
+```{r message=FALSE, warning=FALSE}
+p <- predict(tn, course.grades.test)
+cm <- table(predicted_on_test_data = p , true = course.grades.test$QP)
+cm
+bnclassify:::accuracy(p, course.grades.test$QP)
+```
+
+
