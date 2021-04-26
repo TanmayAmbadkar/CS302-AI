@@ -37,8 +37,6 @@ class SimAnneal():
 
     def accept(self, candidate):
         candidate_cost = self.path_cost(candidate)
-        if candidate_cost < self.current_cost:
-            self.current_cost, self.current_path = candidate_cost,  candidate
 
 # Accept with probability 1 if candidate is better then currrent
 
